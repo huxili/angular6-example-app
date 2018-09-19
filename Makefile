@@ -8,17 +8,38 @@
 #      $ make [-e GROUP=GroupName]  
 #
 # ___________________
-GROUP = $(USER)
 
-ifdef $(GROUP)
-  	NAME = $(GROUP)/angular6
-else 
-	NAME = huxili/angular6
-endif
+NAME = huxili/angular6
 
+# 1. Help 
+# See https://stackoverflow.com/questions/649246/is-it-possible-to-create-a-multi-line-string-variable-in-a-makefile
+# 
+define HELP_BODY
+-------------------------
+Example angular 6 APP with multi-language support. 
+
+Usage: make target
+	
+Target
+========
+
+- help: This help message  
+- build: Build huxili/angualar6 image
+- start: Start application (detached, port: 8080)
+- starti: Start applcation (interactive, port: 8080)
+- sh: Open the container shell
+- log: Show logs of the container
+- rm: Remove the container
+
+endef
+export HELP_BODY
+
+.PHONY: help deploy build status rm
+
+help: 
+	@echo "$$HELP_BODY"
 
 build: build-image-with-cache
-dev: dev-image-with-cache
 build-nocache: build-image-no-cache
 start: run-test-image
 starti: run-test-image-interactive
@@ -30,14 +51,12 @@ build-image-no-cache:
 	docker build --no-cache=true -t $(NAME) .
 build-image-with-cache:
 	docker build -t $(NAME) .
-dev-image-with-cache:
-	docker build --target builder -t "$(NAME):dev" .
 run-test-image: 
 	docker rm -f angular6-example1-test 2>/dev/null || true 
-	docker run -it -d --rm -p 80:80 --name angular6-example1-test "$(NAME)"
+	docker run -it -d --rm -p 8080:80 --name angular6-example1-test "$(NAME)"
 run-test-image-interactive: 
 	docker rm -f angular6-example1-test 2>/dev/null || true 
-	docker run -it --rm -p 80:80 --name angular6-example1-test "$(NAME)"
+	docker run -it --rm -p 8080:80 --name angular6-example1-test "$(NAME)"
 remove-test-container:
 	docker rm -f angular6-example1-test
 run-container-shell:
