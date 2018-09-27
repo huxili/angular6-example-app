@@ -53,13 +53,13 @@ build-image-with-cache:
 	docker build -t $(NAME) .
 run-test-image: 
 	docker rm -f angular6-example1-test 2>/dev/null || true 
-	docker run -it -d --rm -p 8080:80 --name angular6-example1-test "$(NAME)"
+	docker run -it -d --rm -e VIRTUAL_HOST=angular1.huxili.com -p 8180:80 --name angular6-example1-test "$(NAME)"
 run-test-image-interactive: 
 	docker rm -f angular6-example1-test 2>/dev/null || true 
-	docker run -it --rm -p 8080:80 --name angular6-example1-test "$(NAME)"
+	docker run -it --rm  -e VIRTUAL_HOST=angular1.huxili.com -p 8180:80 --name angular6-example1-test "$(NAME)"
 remove-test-container:
 	docker rm -f angular6-example1-test
 run-container-shell:
-	docker rm -f angular6-example1-test /bin/sh
+	docker exec -it angular6-example1-test /bin/sh
 container-logs:
 	docker logs angular6-example1-test
